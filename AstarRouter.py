@@ -67,7 +67,7 @@ def astar(maze, start, end, allow_diagonal_movement = False):
     closed_list = []
 
     # Heapify the open_list and Add the start node
-    heapq.heapify(open_list) 
+    heapq.heapify(open_list)
     heapq.heappush(open_list, start_node)
 
     # Adding a stop condition
@@ -80,7 +80,7 @@ def astar(maze, start, end, allow_diagonal_movement = False):
         adjacent_squares = ((0, -1), (0, 1), (-1, 0), (1, 0), (-1, -1), (-1, 1), (1, -1), (1, 1),)
 
     # Loop until you find the end
-    while len(open_list) > 0:
+    while open_list:
         outer_iterations += 1
 
         if outer_iterations > max_iterations:
@@ -88,7 +88,7 @@ def astar(maze, start, end, allow_diagonal_movement = False):
           # it will not contain the destination
           warn("giving up on pathfinding too many iterations")
           return return_path(current_node)       
-        
+
         # Get the current node
         current_node = heapq.heappop(open_list)
         closed_list.append(current_node)
@@ -99,7 +99,7 @@ def astar(maze, start, end, allow_diagonal_movement = False):
 
         # Generate children
         children = []
-        
+
         for new_position in adjacent_squares: # Adjacent squares
 
             # Get node position
@@ -122,7 +122,11 @@ def astar(maze, start, end, allow_diagonal_movement = False):
         # Loop through children
         for child in children:
             # Child is on the closed list
-            if len([closed_child for closed_child in closed_list if closed_child == child]) > 0:
+            if [
+                closed_child
+                for closed_child in closed_list
+                if closed_child == child
+            ]:
                 continue
 
             # Create the f, g, and h values
@@ -131,7 +135,12 @@ def astar(maze, start, end, allow_diagonal_movement = False):
             child.f = child.g + child.h
 
             # Child is already in the open list
-            if len([open_node for open_node in open_list if child.position == open_node.position and child.g > open_node.g]) > 0:
+            if [
+                open_node
+                for open_node in open_list
+                if child.position == open_node.position
+                and child.g > open_node.g
+            ]:
                 continue
 
             # Add the child to the open list
